@@ -14,7 +14,6 @@ func readPipe(wg *sync.WaitGroup, src *io.ReadCloser, dst *string) {
 	var buf []byte
 	buf, _ = ioutil.ReadAll(*src)
 	*dst = string(buf)
-	buf = make([]byte, 0, 0)
 	wg.Done()
 }
 
