@@ -9,8 +9,7 @@ func PrintMemUsage(logger logr.Logger) {
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
 
-	memLogger := logger.NewWithPrefix("[MEM] ")
-	memLogger.Infof(
+	logger.Infof(
 		"Alloc = %v MiB | TotalAlloc = %v MiB | Sys = %v MiB | NumGC = %v",
 		bToMb(m.Alloc),
 		bToMb(m.TotalAlloc),

@@ -14,11 +14,12 @@ func main() {
 	defer l.Buf().WriteTo(os.Stdout)
 
 	logger := l.NewWithPrefix("[Manager] ")
+	memLogger := logger.NewWithPrefix("[MEM] ")
 
 	fSet := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	runSize := fSet.Int("s", 100, "Size of payload output, should be greater than 10")
 	runAsWorker := fSet.Bool("w", false, "Run as worker")
-	runType := fSet.String("t", "", "Type of handler: \"buf\" or \"io\"")
+	runType := fSet.String("t", "", "Type of handler: \"buf\" or \"io\" or \"io2\"")
 	runDump := fSet.Bool("d", false, "Dump stderr/stdout of runner?")
 	fSet.Parse(os.Args[1:])
 
@@ -27,7 +28,7 @@ func main() {
 		return
 	}
 
-	if *runSize < 4 {
+	if *runSize < 10 {
 		logger.Error("Size (-s) should be greater than 10!")
 		return
 	}
@@ -46,13 +47,21 @@ func main() {
 	var bStderr string = ""
 	var code int = 0
 
-	memory.PrintMemUsage(l)
-	if *runType == "io" {
+	switch *runType {
+	case "buf":
+		bStdout, bStderr, code = runner.RunByteBuffers(logger, worker.GetCommand(*runSize))
+		break
+	case "io":
 		bStdout, bStderr, code = runner.RunIoUtil(logger, worker.GetCommand(*runSize))
-	} else if *runType == "buf" {
-		bStdout, bStderr, code = runner.Buffers(logger, worker.GetCommand(*runSize))
+		break
+	case "io2":
+		bStdout, bStderr, code = runner.RunIoUtilWGoRoutines(logger, worker.GetCommand(*runSize))
+		break
+	default:
+		logger.Errorf("Unsupported run type: \"%s\"", *runType)
+		return
 	}
-	memory.PrintMemUsage(l)
+	memory.PrintMemUsage(memLogger)
 
 	logger.Infof("OutLen %d ErrLen %d Code %d", len(bStdout), len(bStderr), code)
 	if *runDump {

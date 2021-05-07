@@ -7,7 +7,7 @@ import (
 )
 
 func RunIoUtil(logger logr.Logger, cmd *exec.Cmd) (string, string, int) {
-	logger.Info("Running with ioutil")
+	logger.Info("Running with RunIoUtil")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		logger.Errorf("Get StdoutPipe error: \"%v\"", err)

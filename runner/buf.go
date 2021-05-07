@@ -6,8 +6,8 @@ import (
 	"os/exec"
 )
 
-func Buffers(logger logr.Logger, cmd *exec.Cmd) (string, string, int) {
-	logger.Info("Running with buffer")
+func RunByteBuffers(logger logr.Logger, cmd *exec.Cmd) (string, string, int) {
+	logger.Info("Running with RunByteBuffers")
 	var bErr bytes.Buffer
 	var bOut bytes.Buffer
 	cmd.Stdout = &bOut
@@ -25,4 +25,3 @@ func Buffers(logger logr.Logger, cmd *exec.Cmd) (string, string, int) {
 	}
 	return string(bStdout), string(bStderr), code
 }
-
