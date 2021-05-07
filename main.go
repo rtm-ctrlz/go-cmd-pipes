@@ -38,11 +38,6 @@ func main() {
 		return
 	}
 
-	if *runType != "io" && *runType != "buf" {
-		logger.Error("Size (-s) should be greater than 10!")
-		return
-	}
-
 	var bStdout string = ""
 	var bStderr string = ""
 	var code int = 0
