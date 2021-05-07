@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"github.com/bketelsen/logr"
 	"os/exec"
+	"runtime"
 )
 
 func RunByteBuffers(logger logr.Logger, cmd *exec.Cmd) (string, string, int) {
 	logger.Info("Running with RunByteBuffers")
+	defer runtime.GC()
 	var bErr bytes.Buffer
 	var bOut bytes.Buffer
 	cmd.Stdout = &bOut

@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os/exec"
+	"runtime"
 	"sync"
 )
 
@@ -19,6 +20,7 @@ func readPipe(wg *sync.WaitGroup, src *io.ReadCloser, dst *string) {
 
 func RunIoUtilWGoRoutines(logger logr.Logger, cmd *exec.Cmd) (string, string, int) {
 	logger.Info("Running RunIoUtilWGoRoutines")
+	defer runtime.GC()
 
 	var wg sync.WaitGroup
 
@@ -45,6 +47,5 @@ func RunIoUtilWGoRoutines(logger logr.Logger, cmd *exec.Cmd) (string, string, in
 
 	// waiting for pipe-reading goroutines
 	wg.Wait()
-
 	return bStdout, bStderr, code
 }
